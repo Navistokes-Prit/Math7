@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Subtract Tiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .tile {
+            display: inline-block;
+            margin: 5px;
+            padding: 15px;
+            border: 2px solid black;
+            width: 50px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .positive {
+            background-color: lightgreen;
+        }
+        .negative {
+            background-color: lightcoral;
+        }
+        .row {
+            margin-bottom: 20px;
+        }
+        #total {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add and Subtract Number Tiles</h1>
+
+    <div class="row" id="positive-row">
+        <!-- Positive tiles will appear here -->
+    </div>
+
+    <div class="row" id="negative-row">
+        <!-- Negative tiles will appear here -->
+    </div>
+
+    <div>
+        <button onclick="addTile(1)">Add Positive Tile (+1)</button>
+        <button onclick="addTile(-1)">Add Negative Tile (-1)</button>
+        <button onclick="removeTile()">Remove Last Tile</button>
+    </div>
+
+    <div id="total">Total: 0</div>
+
+    <script>
+        let positiveTiles = 0;
+        let negativeTiles = 0;
+        let total = 0;
+        let lastTile = null;
+
+        function updateTotal() {
+            total = positiveTiles - negativeTiles;
+            document.getElementById('total').innerText = `Total: ${total}`;
+        }
+
+        function addTile(value) {
+            const row = value === 1 ? document.getElementById('positive-row') : document.getElementById('negative-row');
+            const tile = document.createElement('div');
+            tile.className = `tile ${value === 1 ? 'positive' : 'negative'}`;
+            tile.innerText = value === 1 ? '+1' : '-1';
+            row.appendChild(tile);
+
+            // Update counts
+            if (value === 1) {
+                positiveTiles += 1;
+            } else {
+                negativeTiles += 1;
+            }
+
+            // Track the last tile added
+            lastTile = { value: value, element: tile };
+
+            // Update the total
+            updateTotal();
+        }
+
+        function removeTile() {
+            if (lastTile) {
+                const row = lastTile.value === 1 ? document.getElementById('positive-row') : document.getElementById('negative-row');
+                row.removeChild(lastTile.element);
+
+                // Update counts
+                if (lastTile.value === 1) {
+                    positiveTiles -= 1;
+                } else {
+                    negativeTiles -= 1;
+                }
+
+                // Clear last tile after removal
+                lastTile = null;
+
+                // Update the total
+                updateTotal();
+            }
+        }
+    </script>
+</body>
+</html>
